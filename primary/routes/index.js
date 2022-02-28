@@ -178,6 +178,13 @@ router.get('/home', wrap(async (req, res) =>  {
 	}
 }));
 
+router.get('/cookies', wrap(async (req, res) => {
+	
+	res.render('./cookies', {
+		title: 'Cookie Policy'
+	});
+}));
+
 router.get('/throwanerror', wrap(async (req, res) => {
 	logger.addContext('funcName', 'throwanerror[get]');
 	

@@ -5,12 +5,36 @@ if(!$){
 }
 
 $(() => {
-	if (Cookies.get('accepted') != 'true') {
-		var cookiesMessage = new NotificationCard('Scoutradioz uses some cookies in order to operate. We do not use third party cookies or tracking cookies.',
-			{ttl: 0, exitable: true, onexit: function(){
+	return;
+	// Test to see if cookies have been blocked. If they have, don't bother showing the cookie message.
+	// eslint-disable-next-line no-unreachable
+	Cookies.set('testcookie', 'foo');
+	var cookiesBlocked = (typeof Cookies.get('testcookie') === 'undefined');
+	
+	if (Cookies.get('accepted') != 'true' || !cookiesBlocked) {
+		var cookiesMessage = $(document.createElement('div'))
+			.addClass('w3-card w3-padding-large theme-text-secondary')
+			.css({
+				position: 'fixed',
+				width: '100%',
+				left: 0,
+				right: 0,
+				bottom: 0,
+				backgroundColor: 'rgba(255,255,255,0.2)'
+			})
+			.html('Scoutradioz needs to use a small number of cookiies in order to operate. See <a href="/cookies" class="link">our cookie policy</a> for a full list of cookies that are used.')
+			.appendTo(document.body);
+		var okBtn = $(document.createElement('button'))
+			.addClass('w3-button w3-margin-left')
+			.text('OK')
+			.css({
+				backgroundColor: 'rgba(255,255,255,0.2)'
+			})
+			.on('click', () => {
 				Cookies.set('accepted', 'true', {expires: 1000});
-			}});
-		// cookiesMessage.show();	2021-08-03 JL: Disabled cookie message because we probably don't need to show the message for the time being
+				cookiesMessage.remove();
+			})
+			.appendTo(cookiesMessage);
 	}
 });
 
