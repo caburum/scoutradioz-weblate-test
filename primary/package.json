@@ -47,10 +47,12 @@
 		"postinstall": "cd .. && npm install",
 		"compile-less": "echo 'Compiling and minifying LESS' && npx lessc public-src/less/base.less public/css/style.css --clean-css=\"--s1 --advanced --compatibility=ie8\"",
 		"compile-less-dev": "echo 'Compiling LESS' &&npx lessc public-src/less/base.less public/css/style.css",
-		"compile-ts": "echo 'Compiling TypeScript' && cd public-src/ts-bundled && npx tsc && cd ../ts && npx tsc",
+		"compile-ts": "echo 'Compiling individual TypeScript' && cd public-src/ts && npx tsc",
+		"compile-ts-bundled": "echo 'Compiling bundled TypeScript' && cd public-src/ts-bundled && npx tsc",
+		"compile-ts-all": "npm run compile-ts && npm run compile-ts-bundled",
 		"compile-static": "npm run compile-less && npm run compile-ts",
 		"watch-staticfiles": "node ./helpers/watch-staticfiles.js",
-		"watch-static": "npm run watch-staticfiles"
+		"watch-static": "node ./helpers/watch-staticfiles.js"
 	},
 	"license": "Apache-2.0",
 	"dependencies": {

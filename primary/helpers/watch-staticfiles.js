@@ -7,6 +7,9 @@ const spawn = require('child_process').spawn;
 require('colors');
 
 const pathToPublicSrc = path.join(__dirname, '../public-src');
+const pathToLess = path.join(pathToPublicSrc, 'less');
+const pathToTs = path.join(pathToPublicSrc, 'ts');
+const pathToTsBundled = path.join(pathToPublicSrc, 'ts-bundled');
 
 var child, isWorking, startTime;
 
@@ -43,25 +46,61 @@ var timeout;
 function init() {
 	start('compile-static'); // Start by compiling all static files
 	
-	fs.watch(pathToPublicSrc, {recursive: true}, (type, filename) => {
-		// Only recompile if LESS or TS files are changed
-		if ((filename.endsWith('.ts') || filename.endsWith('.less')) && !isWorking) {
+	const time = 100;
+	
+	// LESS files
+	fs.watch(pathToLess, {recursive: true}, (type, filename) => {
+		if (filename.endsWith('.less') && !isWorking) {
 			if (timeout) clearTimeout(timeout);
 			timeout = setTimeout(() => {
-				kill();
-				if (filename.endsWith('.ts')) {
-					// Only compile TypeScript files
-					console.log('A change has been detected. Reloading...'.red + ' [TypeScript]'.yellow);
-					start('compile-ts');
-				}
-				else if (filename.endsWith('.less')) {
-					// Only compile LESS files
-					console.log('A change has been detected. Reloading...'.red + ' [LESS]'.yellow);
-					start('compile-less');
-				}
-			}, 100);
+				console.log('A change has been detected. Reloading...'.red + ' [LESS]'.yellow);
+				start('compile-less');
+			}, time); 
 		}
 	});
+	
+	// Individual TS files
+	fs.watch(pathToTs, {recursive: true}, (type, filename) => {
+		if (filename.endsWith('.ts') && !isWorking) {
+			if (timeout) clearTimeout(timeout);
+			timeout = setTimeout(() => {
+				console.log('A change has been detected. Reloading...'.red + ' [TS]'.yellow);
+				start('compile-ts');
+			}, time); 
+		}
+	});
+	
+	// Bundled TS files
+	fs.watch(pathToTsBundled, {recursive: true}, (type, filename) => {
+		if (filename.endsWith('.ts') && !isWorking) {
+			if (timeout) clearTimeout(timeout);
+			timeout = setTimeout(() => {
+				console.log('A change has been detected. Reloading...'.red + ' [TS bundled]'.yellow);
+				start('compile-ts-bundled');
+			}, time); 
+		}
+	});
+	
+	// fs.watch(pathToPublicSrc, {recursive: true}, (type, filename) => {
+	// 	// Only recompile if LESS or TS files are changed
+	// 	if ((filename.endsWith('.ts') || filename.endsWith('.less')) && !isWorking) {
+	// 		if (timeout) clearTimeout(timeout);
+	// 		console.log(type);
+	// 		timeout = setTimeout(() => {
+	// 			kill();
+	// 			if (filename.endsWith('.ts')) {
+	// 				// Only compile TypeScript files
+	// 				console.log('A change has been detected. Reloading...'.red + ' [TypeScript]'.yellow);
+	// 				start('compile-ts');
+	// 			}
+	// 			else if (filename.endsWith('.less')) {
+	// 				// Only compile LESS files
+	// 				console.log('A change has been detected. Reloading...'.red + ' [LESS]'.yellow);
+	// 				start('compile-less');
+	// 			}
+	// 		}, 100);
+	// 	}
+	// });
 }
 
 init();
