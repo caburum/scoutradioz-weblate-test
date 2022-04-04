@@ -199,11 +199,11 @@ $(function(){
 		var matchSubmission = new FormSubmission(matchForm, '/scouting/match/submit', 'matchScouting');
 		
 		matchSubmission.submit((err, response) => {
-			let message = response.message;
-			if (err || !message) {
+			if (err || !response || !response.message) {
 				NotificationCard.error('An error occurred. Please retry.');
 			}
 			else{
+				let message = response.message;
 				NotificationCard.show(message, {darken: true, type: 'good', ttl: 0});
 				
 				// 2022-03-24 JL: Send assigned scouters back to dashboard, send unassigned scouters back to dashboard/matches 
@@ -226,4 +226,8 @@ $(function(){
 // Again because JQuery typing is dumb
 interface Element {
 	disabled: boolean;
+}
+
+interface SRResponse {
+	assigned: boolean;
 }

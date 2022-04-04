@@ -9,8 +9,10 @@ declare class FormSubmission{
 	 * @param {HTMLFormElement|JQuery} form Form to submit
 	 * @param {String} url POST URL to submit to
 	 * @param {String} key Name of form (any)
+	 * @param {object} [options]
+	 * @param {boolean} [options.autoRetry=true] Whether to auto retry.
 	 */
-	constructor(form: HTMLFormElement|JQuery, url: string, key: string);
+	constructor(form: HTMLFormElement|JQuery, url: string, key: string, options?: {autoRetry: boolean});
 	
 	/**
 	 * Submit the formsubmission.
@@ -26,7 +28,12 @@ declare class FormSubmission{
 }
 
 interface ObjectCallback {
-	(error: Error|string|null, response?: any): void;
+	(error: JQueryXHR|Error|string|null, response?: SRResponse): void;
+}
+
+declare class SRResponse {
+	status: number;
+	message: string;
 }
 
 interface Dictionary<T> {

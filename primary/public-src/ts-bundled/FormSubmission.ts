@@ -1,22 +1,43 @@
 'use strict';
 class FormSubmission{
+	/**
+	 * JL note 2022-04-03: Since all uses of FormSubmission follow the following response system:
+	 * 	{
+	 * 		status: number,
+	 * 		message: string
+	 * 	}
+	 * and it is convenient to keep the usage consistent across all usage of FormSubmissions, it should now be enforced.
+	 * In the routes, do res.send({status: <number>, message: <string>}) for anything that uses a FormSubmission.
+	 * 	Use 200 for success statuses.
+	 */
 	
 	data: Dictionary<any>;
 	url: string;
 	key: string;
+	options: {
+		autoRetry: boolean;
+	};
 	
 	/**
 	 * Generic form submission that uses NotificationCards.
 	 * @param {HTMLFormElement|JQuery} form Form to submit
 	 * @param {String} url POST URL to submit to
 	 * @param {String} key Name of form (any)
+	 * @param {object} [options]
+	 * @param {boolean} [options.autoRetry=true] Whether to auto retry.
 	 */
-	constructor(form: HTMLFormElement|JQuery, url: string, key: string){
+	constructor(form: HTMLFormElement|JQuery, url: string, key: string, options?: {autoRetry: boolean}){
 		
 		if (form && url && key) {
 			this.data = this._getFormData(form);
 			this.url = url;
 			this.key = key; //Date.now().toString();
+			
+			if (!options) options = {
+				autoRetry: true
+			};
+			if (typeof options.autoRetry !== 'boolean') options.autoRetry = true;
+			this.options = options;
 			
 			this._addToLocalStorage();
 		}
@@ -27,9 +48,10 @@ class FormSubmission{
 	
 	/**
 	 * Submit the formsubmission.
-	 * @param {ObjectCallback} cb Callback function. (err, message)
+	 * @param {ObjectCallback} cb Callback function. (err, response)
 	 */
 	submit(cb: ObjectCallback){
+		
 		
 		var dataString = this._getFromLocalStorage();
 		
@@ -54,13 +76,18 @@ class FormSubmission{
 				
 					cb(null, response);
 				})
-				.fail(() => {
+				.fail((response) => {
 					console.warn('failed');
-				
-					NotificationCard.show('Failed to send data. Attempting to re-submit...', {type: 'warn', ttl: 1000});
-					setTimeout(() =>{
-						this.submit(cb);
-					}, 3000);
+					
+					if (this.options.autoRetry) {
+						NotificationCard.show('Failed to send data. Attempting to re-submit...', {type: 'warn', ttl: 1000});
+						setTimeout(() =>{
+							this.submit(cb);
+						}, 3000);
+					}
+					else {
+						cb(response);
+					}
 				});
 		}
 		//if data isn't found
@@ -90,7 +117,12 @@ class FormSubmission{
 }
 
 interface ObjectCallback {
-	(error: Error|string|null, response?: any): void;
+	(error: JQueryXHR|Error|string|null, response?: SRResponse): void;
+}
+
+declare class SRResponse {
+	status: number;
+	message: string;
 }
 
 interface Dictionary<T> {
