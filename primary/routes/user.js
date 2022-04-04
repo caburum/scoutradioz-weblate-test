@@ -103,8 +103,9 @@ router.post('/login/select', wrap(async (req, res) => {
 	//If comparison succeeded, then proceed
 	if(comparison == true){
 		
+		// 2022-04-03 JL: Changing "name: {$ne: 'default_user'}" to "visible: true"
 		var users = await utilities.find('users', 
-			{org_key: org_key, name: {$ne: 'default_user'}}, 
+			{org_key: org_key, visible: true},
 			{sort: {name: 1}},
 			{allowCache: true}
 		);
@@ -194,11 +195,19 @@ router.post('/login/withoutpassword', wrap(async (req, res) => {
 	//If no such role exists, throw an error because there must be one
 	if(!userRole) throw new Error(`user.js /login/withoutpassword: No role exists in DB with key ${role_key}`);
 	
+	// 2022-04-03 JL: Sanity check for scoutradioz_admin user. While the bcrypt comparison should always fail when password === "disabled", I'd rather not run the risk. 
+	if (user.password === 'disabled') {
+		return res.send({
+			status: 400,
+			alert: 'You cannot sign in as this user.'
+		});
+	}
+	
 	//if user's access level is greater than scouter, then a password is required.
 	if(userRole.access_level > process.env.ACCESS_SCOUTER){
 		
 		//if user does not have a password but NEEDS a password, then they will need to create one
-		if( user.password == 'default' ){
+		if( user.password === 'default' ){
 			res.send({
 				status: 200,
 				create_password: true
@@ -212,7 +221,7 @@ router.post('/login/withoutpassword', wrap(async (req, res) => {
 			});
 		}
 	} 
-	else if(userRole.access_level == process.env.ACCESS_SCOUTER){
+	else if(userRole.access_level === process.env.ACCESS_SCOUTER){
 		
 		//First, check if the user has a password that is default
 		if( user.password == 'default'){

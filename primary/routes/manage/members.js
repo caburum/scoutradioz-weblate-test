@@ -62,7 +62,7 @@ router.post('/addmember', wrap(async (req, res) => {
 	if(!name || name == ''){
 		return res.redirect('/manage/members?alert=User must have a name.&type=error');
 	}
-	if (name.toLowerCase() === 'default_user') {
+	if (name.toLowerCase() === 'default_user' || name.toLowerCase() === 'scoutradioz_admin') {
 		return res.redirect('/manage/members?alert=You cannot create a user with that name.&type=error');
 	}
 	
