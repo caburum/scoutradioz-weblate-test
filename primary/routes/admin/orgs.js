@@ -203,7 +203,7 @@ router.post('/create', wrap(async (req, res) => {
 		},
 		{
 			label: 'Programming',
-			subteam_key: 'mech',
+			subteam_key: 'prog',
 			pit_scout: true,
 		},
 		{
@@ -218,7 +218,7 @@ router.post('/create', wrap(async (req, res) => {
 		},
 		{
 			label: 'Non-Student',
-			subteam_key: 'mech',
+			subteam_key: 'nonstudent',
 			pit_scout: false,
 		},
 	];
