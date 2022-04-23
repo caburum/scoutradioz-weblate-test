@@ -5,6 +5,5 @@
 	},
 	"goodbye": {
 		"user": "Goodbye, %s!"
-	},
-	"test": "Test string 123"
+	}
 }
