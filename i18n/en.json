@@ -5,5 +5,9 @@
 	},
 	"goodbye": {
 		"user": "Goodbye, %s!"
+	},
+	"dog": {
+		"one": "I have %s dog",
+		"other": "I have %s dogs"
 	}
 }
