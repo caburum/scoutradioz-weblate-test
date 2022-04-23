@@ -5,6 +5,5 @@
 	},
 	"goodbye": {
 		"user": "Goodbye, %s!"
-	},
-	"plural_test": "I have %s dogs"
+	}
 }
