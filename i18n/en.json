@@ -1,9 +1,10 @@
 {
-    "hello": {
-        "generic": "Hello, World!",
-        "user": "Hello, %s!"
-    },
-    "goodbye": {
-        "user": "Goodbye, %s!"
-    }
+	"hello": {
+		"generic": "Hello, World!",
+		"user": "Hello, %s!"
+	},
+	"goodbye": {
+		"user": "Goodbye, %s!"
+	},
+	"test": "Test string 123"
 }
