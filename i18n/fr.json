@@ -1,1 +1,5 @@
-{}
+{
+    "hello": {
+        "user": "Bonjour, %s !"
+    }
+}
