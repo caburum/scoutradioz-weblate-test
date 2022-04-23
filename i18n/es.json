@@ -1,1 +1,9 @@
-{}
+{
+	"goodbye": {
+		"user": "¡Adiós, %s!"
+	},
+	"hello": {
+		"user": "¡Hola, %s!",
+		"generic": "¡Hola Mundo!"
+	}
+}
