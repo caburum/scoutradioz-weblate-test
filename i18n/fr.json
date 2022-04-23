@@ -1,5 +1,9 @@
 {
-    "hello": {
-        "user": "Bonjour, %s !"
-    }
+				"hello": {
+								"user": "Bonjour, %s !",
+								"generic": "Bonjour le monde !"
+				},
+				"goodbye": {
+								"user": "Au revoir, %s !"
+				}
 }
