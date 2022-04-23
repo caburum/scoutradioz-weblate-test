@@ -1,9 +1,13 @@
 {
-				"hello": {
-								"user": "Bonjour, %s !",
-								"generic": "Bonjour le monde !"
-				},
-				"goodbye": {
-								"user": "Au revoir, %s !"
-				}
+	"hello": {
+		"user": "Bonjour, %s !",
+		"generic": "Bonjour le monde !"
+	},
+	"goodbye": {
+		"user": "Au revoir, %s !"
+	},
+	"dog": {
+		"one": "J'ai un chien",
+		"other": "J'ai %s chiens"
+	}
 }
